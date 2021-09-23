@@ -78,14 +78,14 @@ const router = createRouter({
 
 // 路由守卫：全局前置路由守卫，每次切换时、初始化时被调用
 router.beforeEach((to, from, next) => {
-    if(to.meta.title){
-        document.title = to.meta.title
-    }
     next()
 })
 
 // 后置
 router.afterEach((to, from) => {
+    if(to.meta.title){
+        document.title = to.meta.title
+    }
 })
 
 
