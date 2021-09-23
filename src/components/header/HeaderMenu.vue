@@ -24,26 +24,35 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, watch} from 'vue'
 import Route from '../../router'
 
 export default {
   name: "HeaderMenu",
   setup() {
     let current = ref(['homePage'])
+
     function routeTo(path) {
       Route.push(path)
     }
+
     const menu2route = {
       home: 'homePage',
       fruitTree: 'fruitTree',
       areaInfo: 'area',
       varietyInfo: 'variety',
+      treeDetail: 'fruitTree',
     }
-    onMounted(() => {
-      setTimeout(function (){
-        current.value = [menu2route[Route.currentRoute.value.name]]
-      },100)
+    // onMounted(() => {
+    //   setTimeout(function (){
+    //     current.value = [menu2route[Route.currentRoute.value.name]]
+    //     console.log('111',Route.currentRoute.value.name)
+    //   },100)
+    // })
+
+    // 使用监视属性控制菜单高亮
+    watch(Route.currentRoute, (newValue, oldValue) => {
+      current.value = [menu2route[newValue.name]]
     })
 
 

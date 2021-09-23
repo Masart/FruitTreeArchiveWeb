@@ -32,7 +32,7 @@ export default {
 }
 
 .ant-layout-content {
-  height: 190vh;
+  /*height: 190vh;*/
   margin-top: 64px;
   background-color: white;
   padding: 40px;

@@ -10,6 +10,7 @@ import Home from '../components/home/Home'
 import Management from '../components/fruitTreeManage/Management'
 import AreaInfo from '../components/baseInfo/area/AreaInfo'
 import VarietyInfo from '../components/baseInfo/variety/VarietyInfo'
+import FruitTreeDetail from "../components/fruitTreeManage/FruitTreeDetail";
 
 const routes = [
     {
@@ -27,6 +28,15 @@ const routes = [
         path: "/fruitTree",
         name: "fruitTree",
         component: Management,
+        //独享路由守卫，只有前置没有后置，相当于前置
+        // beforeEnter:(to,from,next)=>{
+        //
+        // }
+    },
+    {
+        path: "/fruitTree/treeDetail/:treeCode",
+        name: "treeDetail",
+        component: FruitTreeDetail,
         //独享路由守卫，只有前置没有后置，相当于前置
         // beforeEnter:(to,from,next)=>{
         //

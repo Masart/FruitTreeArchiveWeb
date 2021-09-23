@@ -22,7 +22,7 @@ import {
     Tabs,
     Space,
     Breadcrumb,
-    Popover, Empty, PageHeader
+    Popover, Empty, PageHeader, Divider, Select, Cascader, DatePicker, Upload, List
 } from "ant-design-vue"
 
 
@@ -53,6 +53,12 @@ app.use(Popover)
 app.use(Tabs)
 app.use(Empty)
 app.use(PageHeader)
+app.use(Divider)
+app.use(Cascader)
+app.use(DatePicker)
+app.use(Select)
+app.use(Upload)
+app.use(List)
 
 
 app.mount('#app')
