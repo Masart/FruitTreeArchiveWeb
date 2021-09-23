@@ -22,11 +22,14 @@
 
 <script>
 import Route from '../../router'
-
+import {ref,watch,onMounted} from 'vue'
 
 export default {
   name: "SearchResult",
-  setup() {
+  props:{
+    searchKey:Object
+  },
+  setup(props) {
     const searchResult = [
       {
         treeCode: "qiuyue1",
@@ -66,7 +69,12 @@ export default {
     function openResult(treeCode) {
       Route.push('/fruitTree/treeDetail/'+treeCode)
     }
-
+    onMounted(()=>{
+      console.log('ms',props.searchKey)
+    })
+    watch(props.searchKey,(newValue,oldValue)=>{
+      console.log('ms',newValue)
+    })
     return {
       searchResult,
       openResult,

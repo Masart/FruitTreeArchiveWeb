@@ -3,18 +3,18 @@
     <span>
       <a-input placeholder="请输入果树编号" v-model:value="searchValue" class="inputBox">
       <template #suffix>
-        <a-upload
-            v-model:file-list="fileList"
-            name="fruitQR"
-            :multiple="false"
-            :headers="uploadHeaders"
-            @change="handleChange"
-            accept=".jpg,.png"
-        >
+<!--        <a-upload-->
+<!--            v-model:file-list="fileList"-->
+<!--            name="fruitQR"-->
+<!--            :multiple="false"-->
+<!--            :headers="uploadHeaders"-->
+<!--            @change="handleChange"-->
+<!--            accept=".jpg,.png"-->
+<!--        >-->
           <a-tooltip title="打开本地图片">
             <QrcodeOutlined style="color: rgba(0, 0, 0, 0.45);font-size: 16px"/>
           </a-tooltip>
-        </a-upload>
+<!--        </a-upload>-->
       </template>
     </a-input>
     </span>
@@ -55,11 +55,11 @@
     <a-button type="link" v-if="inputOrSelect" @click="changeSearchMode">高级查询</a-button>
     <a-button type="link" v-if="!inputOrSelect" @click="changeSearchMode">编号查询</a-button>
   </a-divider>
-  <SearchResult></SearchResult>
+  <SearchResult v-if="resultVisible" :searchKey="searchKey"></SearchResult>
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, onMounted, reactive} from 'vue'
 import Route from '../../router'
 
 import {
@@ -76,10 +76,17 @@ export default {
   setup() {
     let inputOrSelect = ref(true)//编号：true   场地品种：false
     let isYearSelectOpen = ref(false)
+    let resultVisible = ref(false)
     let searchValue = ref('')
-    let selectedVariety = ref('')
-    let selectedArea = ref('')
+    let selectedVariety = ref([''])
+    let selectedArea = ref([''])
     let selectedYear = ref()
+    let searchKey = reactive({
+      code: '',
+      variety: '',
+      area: '',
+      year: '',
+    })
     const options = [
       {
         value: 'zhejiang',
@@ -132,11 +139,11 @@ export default {
 
     //切换编号搜索 \ 高级搜索
     function changeSearchMode() {
-      if (inputOrSelect.value){
+      if (inputOrSelect.value) {
         searchValue.value = ''
-      }else{
-        selectedVariety.value = ''
-        selectedArea.value = ''
+      } else {
+        selectedVariety.value = ['']
+        selectedArea.value = ['']
         selectedYear.value = ''
       }
       inputOrSelect.value = !inputOrSelect.value
@@ -156,14 +163,30 @@ export default {
       selectedYear.value = val
       isYearSelectOpen.value = false
     }
+    onMounted(() => {
+      if (Object.keys(Route.currentRoute.value.query).length === 0) {
+        resultVisible.value = false
+      } else {
+        resultVisible.value = true
+        searchKey.code = Route.currentRoute.value.query.code
+        searchKey.variety = Route.currentRoute.value.query.variety
+        searchKey.area = Route.currentRoute.value.query.area
+        searchKey.year = Route.currentRoute.value.query.year
+      }
+    })
 
     function getSearchResult() {
-      if ((typeof(searchValue.value) !=='undefined') &&(searchValue.value!=='')){
-        Route.push('/home?code=' + searchValue.value +'&variety=&area=&year=')
-      }else{
-        if (typeof (selectedYear.value) === 'undefined'){
+      resultVisible.value = true
+      searchKey.code = searchValue.value
+      searchKey.variety = selectedVariety.value
+      searchKey.area = selectedArea.value
+      searchKey.year = selectedYear.value
+      if ((typeof (searchValue.value) !== 'undefined') && (searchValue.value !== '')) {
+        Route.push('/home?code=' + searchValue.value + '&variety=&area=&year=')
+      } else {
+        if (typeof (selectedYear.value) === 'undefined') {
           selectedYear.value = ''
-          // selectedYear.value = selectedYear.value
+          searchKey.year = ''
         }
         Route.push('/home?code=&variety=' + selectedVariety.value +
             '&area=' + selectedArea.value +
@@ -174,7 +197,7 @@ export default {
 
     return {
       searchValue, inputOrSelect, options, selectedYear, isYearSelectOpen, selectedVariety,
-      selectedArea, selectStyle, uploadHeaders,
+      selectedArea, selectStyle, uploadHeaders, resultVisible,searchKey,
       changeSearchMode, moment, selectYear, openYearSelect, handleChange, getSearchResult
     }
   }
