@@ -22,12 +22,18 @@ const routes = [
     {
         path: "/home",
         name: "home",
-        component: Home
+        component: Home,
+        meta:{
+            title: '果树档案馆'
+        }
     },
     {
         path: "/fruitTree",
         name: "fruitTree",
         component: Management,
+        meta:{
+            title: '果树管理'
+        }
         //独享路由守卫，只有前置没有后置，相当于前置
         // beforeEnter:(to,from,next)=>{
         //
@@ -37,6 +43,9 @@ const routes = [
         path: "/fruitTree/treeDetail/:treeCode",
         name: "treeDetail",
         component: FruitTreeDetail,
+        meta:{
+            title: '果树详情'
+        }
         //独享路由守卫，只有前置没有后置，相当于前置
         // beforeEnter:(to,from,next)=>{
         //
@@ -45,12 +54,18 @@ const routes = [
     {
         path: "/baseInfo/area",
         name: "areaInfo",
-        component: AreaInfo
+        component: AreaInfo,
+        meta:{
+            title: '地区信息'
+        }
     },
     {
         path: "/baseInfo/variety",
         name: "varietyInfo",
-        component: VarietyInfo
+        component: VarietyInfo,
+        meta:{
+            title: '品种管理'
+        }
     },
 ]
 
@@ -63,6 +78,9 @@ const router = createRouter({
 
 // 路由守卫：全局前置路由守卫，每次切换时、初始化时被调用
 router.beforeEach((to, from, next) => {
+    if(to.meta.title){
+        document.title = to.meta.title
+    }
     next()
 })
 
