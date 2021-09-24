@@ -86,7 +86,7 @@ export default {
     }
     return {
       breadcrumbList, areaData,searchInput,
-       getSelectedArea,openArea,searchArea,
+      getSelectedArea,openArea,searchArea,
     }
   }
 }

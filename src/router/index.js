@@ -7,10 +7,10 @@
 
 import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import Home from '../components/home/Home'
-import Management from '../components/fruitTreeManage/Management'
 import AreaInfo from '../components/baseInfo/area/AreaInfo'
 import VarietyInfo from '../components/baseInfo/variety/VarietyInfo'
 import FruitTreeDetail from "../components/fruitTreeManage/FruitTreeDetail";
+import AddFruitTree from "@/components/fruitTreeManage/AddFruitTree";
 
 const routes = [
     {
@@ -28,11 +28,11 @@ const routes = [
         }
     },
     {
-        path: "/fruitTree",
-        name: "fruitTree",
-        component: Management,
+        path: "/fruitTree/addFruitTree",
+        name: "addFruitTree",
+        component: AddFruitTree,
         meta:{
-            title: '果树管理'
+            title: '添加果树'
         }
         //独享路由守卫，只有前置没有后置，相当于前置
         // beforeEnter:(to,from,next)=>{

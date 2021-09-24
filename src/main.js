@@ -4,27 +4,11 @@ import {createApp} from 'vue'
 import router from './router'
 import App from './App.vue'
 import {
-    Menu,
-    Layout,
-    Row,
-    Col,
-    Button,
-    Dropdown,
-    Card,
-    Drawer,
-    Tooltip,
-    Form,
-    Input,
-    Descriptions,
-    Modal,
-    Tree,
-    Collapse,
-    Tabs,
-    Space,
-    Breadcrumb,
-    Popover, Empty, PageHeader, Divider, Select, Cascader, DatePicker, Upload, List
+    Menu, Layout, Row, Col, Button, Dropdown, Card, Drawer, Tooltip, Form,
+    Input, Descriptions, Modal, Tree, Collapse, Tabs, Space, Breadcrumb, Tag,
+    Popover, Empty, PageHeader, Divider, Select, Cascader, DatePicker, Upload,
+    List, Timeline, Pagination, TreeSelect, Radio, InputNumber
 } from "ant-design-vue"
-
 
 //创建应用实例对象
 const app = createApp(App)
@@ -43,7 +27,6 @@ app.use(Tooltip)
 app.use(Form)
 app.use(Input)
 app.use(Card)
-app.use(Descriptions)
 app.use(Modal)
 app.use(Tree)
 app.use(Collapse)
@@ -59,6 +42,13 @@ app.use(DatePicker)
 app.use(Select)
 app.use(Upload)
 app.use(List)
+app.use(Timeline)
+app.use(Pagination)
+app.use(Descriptions)
+app.use(Tag)
+app.use(TreeSelect)
+app.use(Radio)
+app.use(InputNumber)
 
 
 app.mount('#app')

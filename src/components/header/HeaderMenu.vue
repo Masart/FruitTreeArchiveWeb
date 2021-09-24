@@ -3,9 +3,12 @@
     <a-menu-item key="homePage" @click="routeTo('/home')">
       首页
     </a-menu-item>
-    <a-menu-item key="fruitTree" @click="routeTo('/fruitTree')">
-      果树管理
-    </a-menu-item>
+    <a-sub-menu>
+      <template #title>果树管理</template>
+        <a-menu-item key="addFruitTree" @click="routeTo('/fruitTree/addFruitTree')">
+          添加果树
+        </a-menu-item>
+    </a-sub-menu>
     <a-sub-menu>
       <template #title>基本信息</template>
       <a-menu-item key="variety" @click="routeTo('/baseInfo/variety')">
@@ -38,10 +41,10 @@ export default {
 
     const menu2route = {
       home: 'homePage',
-      fruitTree: 'fruitTree',
+      addFruitTree: 'addFruitTree',
       areaInfo: 'area',
       varietyInfo: 'variety',
-      treeDetail: 'fruitTree',
+      treeDetail: 'addFruitTree',
     }
     // onMounted(() => {
     //   setTimeout(function (){

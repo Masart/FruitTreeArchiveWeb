@@ -78,8 +78,8 @@ export default {
     let isYearSelectOpen = ref(false)
     let resultVisible = ref(false)
     let searchValue = ref('')
-    let selectedVariety = ref([''])
-    let selectedArea = ref([''])
+    let selectedVariety = ref([])
+    let selectedArea = ref([])
     let selectedYear = ref()
     let searchKey = reactive({
       code: '',
@@ -142,8 +142,8 @@ export default {
       if (inputOrSelect.value) {
         searchValue.value = ''
       } else {
-        selectedVariety.value = ['']
-        selectedArea.value = ['']
+        selectedVariety.value = []
+        selectedArea.value = []
         selectedYear.value = ''
       }
       inputOrSelect.value = !inputOrSelect.value
