@@ -30,7 +30,7 @@
               headStyle="font-size:23px;border-bottom:0"
               bodyStyle="padding:0;padding-top:25px">
         <template #extra>
-          <a-button type="primary" class="addRootAreaBtn" shape="circle">
+          <a-button type="primary" class="addRootAreaBtn" shape="circle" @click="toAddArchive">
             <template #icon>
               <a-tooltip placement="right">
                 <template #title>
@@ -109,6 +109,8 @@ export default {
     //打开档案记录详情页
     function toArchiveDetail(archiveCode) {
       console.log(archiveCode)
+      Route.push('/fruitTree/treeDetail/archiveDetail/'+archiveCode)
+
     }
 
     //打开编辑果树页面
@@ -116,12 +118,16 @@ export default {
       isInfoOrEdit.value = false
     }
 
+    function toAddArchive(){
+      Route.push('/fruitTree/treeDetail/addArchive?tree='+treeInfo.treeCode)
+    }
+
     //关闭editTree回调
     const getEditTreeVisible = (e) => {
       console.log('e', e)
       isInfoOrEdit.value = !e.editVisible
     }
-
+    //删除果树警告弹窗
     const delTreeWarningModal = () => {
       let delTreeTitle = '确认删除果树 ' + treeInfo.treeCode + ' ？'
       Modal.confirm({
@@ -147,7 +153,7 @@ export default {
     };
     return {
       treeCode, archiveDateList, pageCurrent, pageTotal, isInfoOrEdit, treeInfo, treeStatus,
-      toArchiveDetail, getEditTreeVisible, openTreeEditor, delTreeWarningModal
+      toArchiveDetail, getEditTreeVisible, openTreeEditor, delTreeWarningModal,toAddArchive
     }
   }
 }

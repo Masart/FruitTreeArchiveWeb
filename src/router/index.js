@@ -10,7 +10,9 @@ import Home from '../components/home/Home'
 import AreaInfo from '../components/baseInfo/area/AreaInfo'
 import VarietyInfo from '../components/baseInfo/variety/VarietyInfo'
 import FruitTreeDetail from "../components/fruitTreeManage/FruitTreeDetail";
-import AddFruitTree from "@/components/fruitTreeManage/AddFruitTree";
+import AddFruitTree from "../components/fruitTreeManage/AddFruitTree";
+import ArchiveDetail from "../components/archiveManage/ArchiveDetail";
+import AddArchive from "../components/archiveManage/AddArchive";
 
 const routes = [
     {
@@ -50,6 +52,22 @@ const routes = [
         // beforeEnter:(to,from,next)=>{
         //
         // }
+    },
+    {
+        path: "/fruitTree/treeDetail/archiveDetail/:archiveCode",
+        name: "archiveDetail",
+        component: ArchiveDetail,
+        meta: {
+            title: '记录内容'
+        }
+    },
+    {
+        path: "/fruitTree/treeDetail/addArchive",
+        name: "addArchive",
+        component: AddArchive,
+        meta: {
+            title: '添加记录'
+        }
     },
     {
         path: "/baseInfo/area",

@@ -7,7 +7,7 @@ import {
     Menu, Layout, Row, Col, Button, Dropdown, Card, Drawer, Tooltip, Form,
     Input, Descriptions, Modal, Tree, Collapse, Tabs, Space, Breadcrumb, Tag,
     Popover, Empty, PageHeader, Divider, Select, Cascader, DatePicker, Upload,
-    List, Timeline, Pagination, TreeSelect, Radio, InputNumber
+    List, Timeline, Pagination, TreeSelect, Radio, InputNumber, Statistic, Image,
 } from "ant-design-vue"
 
 //创建应用实例对象
@@ -49,6 +49,8 @@ app.use(Tag)
 app.use(TreeSelect)
 app.use(Radio)
 app.use(InputNumber)
+app.use(Statistic)
+app.use(Image)
 
 
 app.mount('#app')

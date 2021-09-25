@@ -74,7 +74,8 @@
       <a-descriptions bordered :column="4" layout="vertical" v-if="!editOrAdd">
         <a-descriptions-item label="果树编号" :span="3">
           <a-form-item>
-            <a-input v-model:value="editFruitFormData.treeCode"/>
+            <a-input v-model:value="editFruitFormData.treeCode" placeholder="果树编号"
+            />
           </a-form-item>
         </a-descriptions-item>
         <a-descriptions-item label="种植年份" :span="1">
@@ -108,7 +109,7 @@
           <a-form-item>
             <a-textarea
                 v-model:value="editFruitFormData.areaDetail"
-                placeholder=""
+                placeholder="描述果树所属的详细位置"
                 :auto-size="{ minRows: 2, maxRows: 2 }"
             />
           </a-form-item>
@@ -139,16 +140,7 @@ export default {
     editOrAdd: Boolean,//true 编辑; false 添加
   },
   setup(props, context) {
-    let editFruitFormData = reactive({
-      treeCode: '',
-      treeYear: '',
-      treeArea: '',
-      areaDetail: '',
-      treeVariety: '',
-      treeStatus: '',
-      treeRemark: '',
-      userName: '',
-    })
+
     const toyear = parseInt(moment().format("YYYY"))
     const varietyTreeData = [
       {
@@ -255,8 +247,18 @@ export default {
         ]
       },
     ]
+    let editFruitFormData = reactive({
+      treeCode: null,
+      treeYear: toyear,
+      treeArea: null,
+      areaDetail: null,
+      treeVariety: null,
+      treeStatus: '',
+      treeRemark: '',
+      userName: '',
+    })
     onMounted(() => {
-      if (props) {
+      if (props.editOrAdd) {
         editFruitFormData.treeCode = props.treeInfo.treeCode
         editFruitFormData.treeYear = props.treeInfo.treeYear
         editFruitFormData.treeArea = props.treeInfo.treeArea
