@@ -32,15 +32,14 @@
       </a-page-header>
       <div class="carouselBody">
         <a-card :bordered="false" hoverable :style="arrowStyle"
-                bodyStyle="padding:43px 9px;">
+                bodyStyle="padding:43px 9px;" @click="changePic(-1)">
           <LeftOutlined/>
         </a-card>
-        <a-tabs v-model:activeKey="activeKey" tab-position="bottom">
+        <a-tabs v-model:activeKey="tabsActivateKey" tab-position="bottom">
           <a-tab-pane v-for="(item) in imgPath" :key="item" class="carouselBodyPanel">
             <template #tab>
               <img :src="'testImg/' + item" class="carouselTitle"/>
             </template>
-
             <a-image-preview-group>
               <a-image :src="'testImg/' + item" :width="300"/>
             </a-image-preview-group>
@@ -48,7 +47,7 @@
         </a-tabs>
 
         <a-card :bordered="false" hoverable :style="arrowStyle"
-                bodyStyle="padding:43px 9px;">
+                bodyStyle="padding:43px 9px;" @click="changePic(1)">
           <RightOutlined/>
         </a-card>
       </div>
@@ -97,6 +96,7 @@ export default {
     let archiveTitle = ref(archiveInfo.treeCode + ' 的档案记录')
     let imgPath = ['14_1_6_w.jpg', '14_1_6_wn.jpg', '14_1_6_ws.jpg', '14_1_7_e.jpg', '14_1_7_en.jpg', '14_1_7_es.jpg', '14_1_7_w.jpg', '14_1_7_wn.jpg', '14_1_7_ws.jpg', '14_1_8_e.jpg', '14_1_8_en.jpg', '14_1_8_es.jpg', '14_1_8_w.jpg', '14_1_8_wn.jpg', '14_1_8_ws.jpg', '14_1_9_e.jpg', '14_1_9_en.jpg', '14_1_9_es.jpg', '14_1_9_w.jpg']
     let isEdit = ref(false) //true 编辑状态；false 展示状态
+    let tabsActivateKey = ref(imgPath[0]) //true 编辑状态；false 展示状态
     const arrowStyle = "height:100px;z-index: 2;border-radius: 3px"
     onMounted(() => {
       archiveInfo.archiveCode = '2021092501'
@@ -159,10 +159,21 @@ export default {
     function backToArchiveDetail() {
       isEdit.value = false
     }
-
+    //改变轮播的activate
+    function changePic(opr) {
+      let idx = imgPath.findIndex(item => item === tabsActivateKey.value)
+      if (idx === 0 && opr===-1){
+        tabsActivateKey.value = imgPath[(imgPath.length-1)]
+      }else if (idx === (imgPath.length-1) && opr > 0){
+        tabsActivateKey.value = imgPath[0]
+      }else{
+        tabsActivateKey.value = imgPath[idx+opr]
+      }
+    }
     return {
-      archiveInfo, archiveTitle, imgPath, arrowStyle, isEdit,
-      backToTreeDetail, delArchiveModal, backToArchiveDetail, editArchiveDetail
+      archiveInfo, archiveTitle, imgPath, arrowStyle, isEdit,tabsActivateKey,
+      backToTreeDetail, delArchiveModal, backToArchiveDetail, editArchiveDetail,
+      changePic,
     }
   }
 }
