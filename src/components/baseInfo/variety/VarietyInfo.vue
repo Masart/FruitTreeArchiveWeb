@@ -13,7 +13,8 @@
         <VarietyTree :varietyDetail="varietyList"/>
       </template>
     </a-page-header>
-    <a-modal v-model:visible="addRootVarietyModalVisible" title="添加品种" @ok="submitAddRootVariety" >
+    <a-modal v-model:visible="addRootVarietyModalVisible" title="添加品种" @ok="submitAddRootVariety"
+    @cancel="closeRootVarietyModal">
       <template #footer>
         <a-button key="back" @click="closeRootVarietyModal">取消</a-button>
         <a-button key="submit" type="primary" @click="submitAddRootVariety">添加</a-button>
@@ -29,6 +30,8 @@
 <script>
 import {ref} from "vue"
 import VarietyTree from "@/components/baseInfo/variety/VarietyTree";
+import axios from "@/axios";
+import URLConfig from "@/config/URLConfig";
 
 export default {
   name: "VarietyInfo",
@@ -56,25 +59,42 @@ export default {
     ])
     // let varietyList = ref([])
     let addRootVarietyModalVisible = ref(false)
-    let rootVarietyName = ref('')
+    let rootVarietyName = ref()
+
     //添加根品种
-    function addRootVariety(){
+    function addRootVariety() {
       addRootVarietyModalVisible.value = true
     }
+
     //提交添加
-    function submitAddRootVariety(){
-      addRootVarietyModalVisible.value = false
-
+    function submitAddRootVariety() {
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/variety/addVariety',
+        data: {},
+        params: {
+          'varietyName': rootVarietyName.value,
+          'varietyFather': '0',
+        }
+      }).then((res) => {
+        console.log(res)
+        if (res.code === '0' && res.data) {
+          console.log("添加成功")
+          addRootVarietyModalVisible.value = false
+          rootVarietyName.value=null
+        }
+      })
 
     }
+
     //关闭添加根品种对话框
-    function closeRootVarietyModal(){
+    function closeRootVarietyModal() {
       addRootVarietyModalVisible.value = false
-
+      rootVarietyName.value=null
     }
+
     return {
-      varietyList,addRootVarietyModalVisible,rootVarietyName,
-      closeRootVarietyModal,addRootVariety,submitAddRootVariety
+      varietyList, addRootVarietyModalVisible, rootVarietyName,
+      closeRootVarietyModal, addRootVariety, submitAddRootVariety
     }
   }
 }

@@ -10,19 +10,20 @@
     </template>
     <a-tab-pane v-for="(item) in varietyDetail" :key="item.varietyCode" :tab="item.varietyName">
       <VarietyTree :varietyDetail="item.children"/>
+      <a-modal v-model:visible="addVarietyModalVisible" :title="modalTitle" @ok="submitAddVariety" @cancel="closeAddVarietyModal">
+        <template #footer>
+          <a-button key="back" @click="closeAddVarietyModal">取消</a-button>
+          <a-button key="submit" type="primary" @click="submitAddVariety">添加</a-button>
+        </template>
+        <a-input
+            v-model:value="varietyName4add"
+            placeholder="为子品种添加名称"
+        />
+      </a-modal>
     </a-tab-pane>
   </a-tabs>
-  <a-modal v-model:visible="addVarietyModalVisible" :title="modalTitle" @ok="submitAddVariety">
-    <template #footer>
-      <a-button key="back" @click="closeAddVarietyModal">取消</a-button>
-      <a-button key="submit" type="primary" @click="submitAddVariety">添加</a-button>
-    </template>
-    <a-input
-        v-model:value="varietyName4add"
-        placeholder="为子品种添加名称"
-    />
-  </a-modal>
-  <a-modal v-model:visible="renameVarietyModalVisible" title="重命名" @ok="submitAddVariety">
+
+  <a-modal v-model:visible="renameVarietyModalVisible" title="重命名" @ok="submitAddVariety" @cancel="closeRenameVarietyModal">
     <template #footer>
       <a-button key="back" @click="closeRenameVarietyModal">取消</a-button>
       <a-button key="submit" type="primary" @click="submitRenameVariety">重命名</a-button>
@@ -40,6 +41,8 @@ import {ref, onBeforeMount, h,createVNode} from "vue"
 import {
   ExclamationCircleOutlined
 } from '@ant-design/icons-vue';
+import axios from "@/axios";
+import URLConfig from "@/config/URLConfig";
 
 export default {
   name: "VarietyTree",
@@ -104,27 +107,51 @@ export default {
     //重命名品种提交
     function submitRenameVariety() {
       renameVarietyModalVisible.value = false
-      console.log(varietyName4rename.value)
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/variety/editVariety',
+        data: {},
+        params: {
+          'varietyName': varietyName4rename.value,
+          'varietyCode': activeKey.value,
+        }
+      }).then((res) => {
+        console.log(res)
+        if (res.code === '0' && res.data) {
+          console.log("重命名成功")
+          addVarietyModalVisible.value = false
+          varietyName4rename.value=null
+        }
+      })
 
     }
 
     function closeRenameVarietyModal() {
       renameVarietyModalVisible.value = false
-      varietyName4rename.value = ''
-
+      varietyName4rename.value = null
     }
 
     //添加品种对话框提交
     function submitAddVariety() {
-      addVarietyModalVisible.value = false
-      console.log(varietyName4add.value)
-
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/variety/addVariety',
+        data: {},
+        params: {
+          'varietyName': varietyName4add.value,
+          'varietyFather': activeKey.value,
+        }
+      }).then((res) => {
+        console.log(res)
+        if (res.code === '0' && res.data) {
+          console.log("添加成功")
+          addVarietyModalVisible.value = false
+          varietyName4add.value=null
+        }
+      })
     }
 
     //关闭添加品种对话框
     function closeAddVarietyModal() {
       addVarietyModalVisible.value = false
-      console.log(varietyName4add.value)
       varietyName4add.value = ''
 
     }

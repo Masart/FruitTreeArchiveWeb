@@ -9,7 +9,7 @@
       :bodyStyle="userDrawerBodyStyle"
   >
     <img height="200" :src="userImgPath">
-    <div className="userDrawerUserName">{{ userInfo.userName }}</div>
+    <div class="userDrawerUserName">{{ userInfo.userName }}</div>
     <a-card :bordered="false" size="small" style="min-height: 55vh">
       <template #extra>
         <a-tooltip v-if="!userInfoEditVisible" placement="bottomRight">
@@ -20,11 +20,11 @@
             <EditOutlined style="font-size: 22px"/>
           </a-button>
         </a-tooltip>
-        <a-button type="link" v-if="userInfoEditVisible" @click="changeUserInfoEditVisible"
+        <a-button type="link" v-if="userInfoEditVisible" @click="submitUserInfo"
                   style="color: #52c41a;height: 20px">
           <CheckOutlined/>
         </a-button>
-        <a-button type="link" v-if="userInfoEditVisible" @click="changeUserInfoEditVisible"
+        <a-button type="link" v-if="userInfoEditVisible" @click="closeUserInfoEditor"
                   style="color: red;height: 20px">
           <CloseOutlined/>
         </a-button>
@@ -90,9 +90,11 @@
 
 <script>
 import {ref, reactive} from 'vue'
+import axios from '../../axios'
 import {
   EditOutlined, PhoneFilled, MailFilled, UserOutlined, CloseOutlined, CheckOutlined, HomeFilled
 } from '@ant-design/icons-vue';
+import URLConfig from "@/config/URLConfig";
 
 export default {
 
@@ -109,13 +111,13 @@ export default {
       textAlign: "center",
       height: "100vh"
     }
-    let userInfo = {
-      userCode: 'admin',
+    let userInfo = reactive({
+      userCode: '',
       userRole: '核心管理员',
-      userName: '管理员',
-      userPhone: '13012345678',
-      userEmail: '12345678@qq.com'
-    }
+      userName: '',
+      userPhone: '',
+      userEmail: ''
+    })
     let userInfoState = reactive({
       userCode: '',
       userRole: '',
@@ -137,17 +139,26 @@ export default {
       userPhone: [{required: true, message: '请输入正确的联系方式', trigger: 'change'}],
       userEmail: [{required: true, message: '邮箱格式不正确', trigger: 'change', type: 'object'}],
     };
+
+
+    let validateCheckPwd = async (rule, value) => {
+      if (value === '') {
+        return Promise.reject('请再次输入密码！');
+      } else if (value !== userPwdState.newPwd) {
+        return Promise.reject("两次输入的密码不一致！");
+      } else {
+        return Promise.resolve();
+      }
+    };
+
+
     const pwdRules = {
       oldPwd: [{required: true, message: '旧密码不能为空', trigger: 'change'},],
       newPwd: [{required: true, message: '新密码不能为空', trigger: 'change'},],
       checkPwd: [{
-        validator: (rule, value, callback) => {
-          if (value === '') {
-            return callback('密码不能为空');
-          } else if (value !== userPwdState.newPwd) {
-            return callback("两次输入的密码不一致");
-          }
-        }, trigger: 'change'
+        required: true,
+        validator: validateCheckPwd,
+        trigger: 'change'
       }]
     }
     const onClose = () => {
@@ -156,9 +167,25 @@ export default {
     }
 
     function showUserDrawer() {
-      userDrawerVisible.value = true
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/user/getUser',
+        data: {},
+        params: {
+          'userCode': 'admin',
+        }
+      }).then((res) => {
+        if (res.code === '0') {
+          userInfo.userCode = res.data.userCode
+          userInfo.userName = res.data.userName
+          userInfo.userPhone = res.data.userPhone
+          userInfo.userEmail = res.data.userEmail
+          userDrawerVisible.value = true
+        }
+      })
+
     }
 
+    //编辑用户信息界面点击回调
     function changeUserInfoEditVisible() {
       if (userInfoEditVisible.value === false) {
         userInfoState.userCode = userInfo.userCode
@@ -180,13 +207,70 @@ export default {
     }
 
     function changePwd() {
-      changePwdModalVisible()
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/user/changePassword',
+        data: {},
+        params: {
+          'userCode': userInfo.userCode,
+          'oldPwd': userPwdState.oldPwd,
+          'newPwd': userPwdState.newPwd,
+        }
+      }).then((res) => {
+        console.log(res)
+        if (res.code === '0') {
+          if (res.data) {
+            console.log('修改成功')
+            changePwdModalVisible()
+          }
+        }
+      })
+    }
+
+    //修改用户信息提交表单
+    function submitUserInfo() {
+      axios.ajaxRequest({
+        url: URLConfig.requestAddress + '/fruitTreeArchive/user/changeUserInfo',
+        data: {},
+        params: {
+          'userCode': userInfoState.userCode,
+          'userName': userInfoState.userName,
+          'userPhone': userInfoState.userPhone,
+          'userEmail': userInfoState.userEmail,
+        }
+      }).then((res) => {
+        if (res.code === '0') {
+          if (res.data) {
+            showUserDrawer()
+            console.log('修改成功')
+            changeUserInfoEditVisible()
+          }
+        }
+      })
+    }
+
+    //取消修改用户信息
+    function closeUserInfoEditor() {
+      changeUserInfoEditVisible()
     }
 
     return {
-      userInfo, userImgPath, userDrawerVisible, userDrawerBodyStyle, userInfoState, userInfoRules, userInfoEditVisible,
-      pwdModalVisible, pwdRules, userPwdState,
-      onClose, showUserDrawer, changeUserInfoEditVisible, changePwdModalVisible, changePwd,
+      userInfo,
+      userImgPath,
+      userDrawerVisible,
+      userDrawerBodyStyle,
+      userInfoState,
+      userInfoRules,
+      userInfoEditVisible,
+      pwdModalVisible,
+      pwdRules,
+      userPwdState,
+      onClose,
+      showUserDrawer,
+      changeUserInfoEditVisible,
+      changePwdModalVisible,
+      changePwd,
+      submitUserInfo,
+      closeUserInfoEditor,
     }
   }
 }
